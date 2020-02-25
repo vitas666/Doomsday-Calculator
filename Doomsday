@@ -1,0 +1,105 @@
+import tkinter as tk
+import math
+
+window = tk.Tk()
+window.title('Doomsday Calculator')
+window.geometry('800x600')
+window.configure(background='white')
+
+header_label = tk.Label(window, text='Doomsday計算器')
+header_label.pack()
+
+# 建立事件處理函式（event handler），透過元件command 參數存取
+def doomsday():
+    years = int(years_entry.get())
+    month = int(month_entry.get())
+    dayday= int(dayday_entry.get())
+    date=["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    dooms={"Monday":0, "Tuesday":1, "Wednesday":2, "Thursday":3, "Friday":4, "Saturday":5, "Sunday":6}
+    if years>=2020:
+        loop_1=[5,6,0,1,3,4,5,6,1,2,3,4,6,0,1,2,4,5,6,0,2,3,4,5,0,1,2,3]
+        a=list(range(2020,years+1))
+        hehe=0
+        for i in range(0,years-2019):
+            a[i]=date[loop_1[hehe]]
+            hehe+=1
+            if hehe>=28:
+                hehe=0
+        doomsday=dooms[a[years-2020]]
+        result = '你輸入年份的doomsday為：{} '.format(a[years-2020])
+        result_label.configure(text=result)
+        
+    else:
+        loop_2=[3,2,1,0,5,4,3,2,0,6,5,4,2,1,0,6,4,3,2,1,6,5,4,3,1,0,6,5]
+        b=list(range(2019,years-1,-1))
+        count=0
+        for i in range(0,2020-years):
+            b[i]=date[loop_2[count]]
+            count+=1
+            if count>=28:
+                count=0
+        doomsday=dooms[b[2019-years]]
+        result = '你輸入年份的doomsday為：{} '.format(b[2019-years])
+        result_label.configure(text=result)
+        
+    #閏年1/11是doomsday, 平年是1/10
+    if years%4==0:
+        day=[31,29,31,30,31,30,31,31,30,31,30,31]
+        one_01=dooms[date[doomsday-3]]        
+        fresh_1=0
+        for i in range(0,month-1):
+            fresh_1+=day[i]
+        final=one_01+(fresh_1+dayday-1)%7
+        if final>=7:
+            final-=7
+        result_2 = '你輸入的日期為：{} '.format(date[final])
+        result_2_label.configure(text=result_2)
+
+    else:
+        day=[31,28,31,30,31,30,31,31,30,31,30,31]
+        one_01=dooms[date[doomsday-2]]
+        fresh_1=0
+        for i in range(0,month-1):
+            fresh_1+=day[i]
+        final=one_01+(fresh_1+dayday-1)%7
+        if final>=7:
+            final-=7
+        result_2 = '你輸入的日期為：{} '.format(date[final])
+        result_2_label.configure(text=result_2)
+
+
+# 以下為 years_frame 群組
+years_frame = tk.Frame(window)
+years_frame.pack(side=tk.TOP)
+years_label = tk.Label(years_frame, text='西元年分')
+years_label.pack(side=tk.LEFT)
+years_entry = tk.Entry(years_frame)
+years_entry.pack(side=tk.LEFT)
+
+# 以下為 month_frame 群組
+month_frame = tk.Frame(window)
+month_frame.pack(side=tk.TOP)
+month_label = tk.Label(month_frame, text='月份')
+month_label.pack(side=tk.LEFT)
+month_entry = tk.Entry(month_frame)
+month_entry.pack(side=tk.LEFT)
+
+# 以下為 dayday_frame 群組
+dayday_frame = tk.Frame(window)
+dayday_frame.pack(side=tk.TOP)
+dayday_label = tk.Label(dayday_frame, text='日期')
+dayday_label.pack(side=tk.LEFT)
+dayday_entry = tk.Entry(dayday_frame)
+dayday_entry.pack(side=tk.LEFT)
+
+result_label = tk.Label(window)
+result_label.pack()
+
+result_2_label = tk.Label(window)
+result_2_label.pack()
+
+calculate_btn = tk.Button(window, text='馬上計算', command=doomsday)
+calculate_btn.pack()
+
+# 運行主程式
+window.mainloop()
